@@ -25,6 +25,8 @@ namespace PoC
             };
 
             // Perform
+            Console.WriteLine($"Is available: {device.IsAvailable}");
+
             await device.Read();
 
             await device.Read();

@@ -17,6 +17,8 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
         internal event EventHandler<CardDataEventArgs> OnCardData;
         internal event EventHandler<CardReadFailedEventArgs> OnReadFailed;
 
+        public ICT3K5Device() { }
+
         /// <summary>
         /// 
         /// </summary>
@@ -29,6 +31,26 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
             _beforeNextTryTimeout = beforeNextTryTimeout.TotalMilliseconds == 0 ? TimeSpan.FromMilliseconds(500) : beforeNextTryTimeout;
             _logger = logger;
         }
+
+        public bool IsAvailable
+        {
+            get
+            {
+                try
+                {
+                    if (OpenCOM() && Enabler())
+                        return true;
+                }
+                catch { }
+                finally {
+                    Disable();
+                    CloseCOM();
+                }
+
+                return false;
+            }
+        }
+
         public async Task Read()
             => await Task.Factory.StartNew(() => ReadCard());
 
@@ -42,7 +64,7 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
             if (!OpenCOM())
                 return;
 
-            if (!EnableCardReader() && Initialize() && !EnableCardReader())
+            if (!Enabler() && Initialize() && !Enabler())
                 return;
 
             int rereadAttempts = 0;
@@ -244,7 +266,7 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
             err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
         }
 
-        private bool EnableCardReader()
+        private bool Enabler()
         {
             ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x3a;
