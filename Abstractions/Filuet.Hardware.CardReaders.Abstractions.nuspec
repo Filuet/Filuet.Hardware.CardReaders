@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
-    <id>Filuet.Hardware.CardReaders</id>
+    <id>Filuet.Hardware.CardReaders.Abstractions</id>
     <version>1.0.1</version>
     <title>Filuet ordering</title>
     <authors>Igor Gutsaev</authors>
@@ -10,7 +10,7 @@
     <projectUrl>https://asc.filuet.com/getting-started</projectUrl>
     <iconUrl>https://asc.filuet.com/images/errlog_dark_logo.png</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Card readers (just to read card requisites)</description>
+    <description>Card reader abstractins</description>
     <releaseNotes>Initial</releaseNotes>
     <copyright>Copyright 2022 Filuet. Ltd.</copyright>
     <tags></tags>

@@ -1,9 +1,7 @@
-﻿using Filuet.Hardware.CardReaders.Readers.ICT3K5.Enums;
-using Filuet.Hardware.CardReaders.Readers.ICT3K5.Events;
+﻿using Filuet.Hardware.CardReaders.Abstractions.Events;
+using Filuet.Hardware.CardReaders.Readers.ICT3K5.Enums;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,8 +14,8 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
     internal class ICT3K5Device
     {
-        internal event EventHandler<OnDataEventArgs> OnCardData;
-        internal event EventHandler<OnReadFailedEventArgs> OnReadFailed;
+        internal event EventHandler<CardDataEventArgs> OnCardData;
+        internal event EventHandler<CardReadFailedEventArgs> OnReadFailed;
 
         /// <summary>
         /// 
@@ -67,7 +65,7 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
                     {
                         var splitted = tracks[0].Split('^', StringSplitOptions.RemoveEmptyEntries);
                         if (splitted.Length >= 3)
-                            OnCardData?.Invoke(this, new OnDataEventArgs { CardNumber = splitted[0].Replace("B", string.Empty).Trim(),
+                            OnCardData?.Invoke(this, new CardDataEventArgs { CardNumber = splitted[0].Replace("B", string.Empty).Trim(),
                                 CardHolder = splitted[1].Trim(),
                                 ExpiryYear = Convert.ToUInt32(splitted[2].Split(' ')[0].Substring(0, 2).Trim()),
                                 ExpiryMonth = Convert.ToUInt32(splitted[2].Split(' ')[0].Substring(2, 2).Trim()) });
@@ -284,7 +282,7 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
                 return ICT3K5CardReaderStatus.CardPresent;
             else if (reply.replyType == ICT3K5ResponseType.NegativeReply)
             {
-                OnReadFailed?.Invoke(this, new OnReadFailedEventArgs());
+                OnReadFailed?.Invoke(this, new CardReadFailedEventArgs());
                 _stopped = true;
             }
 
