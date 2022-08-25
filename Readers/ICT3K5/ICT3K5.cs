@@ -14,8 +14,8 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
     public class ICT3K5Device
     {
-        internal event EventHandler<CardDataEventArgs> OnCardData;
-        internal event EventHandler<CardReadFailedEventArgs> OnReadFailed;
+        public event EventHandler<CardDataEventArgs> OnCardData;
+        public event EventHandler<CardReadFailedEventArgs> OnReadFailed;
 
         public ICT3K5Device() { }
 
@@ -26,6 +26,11 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
         /// <param name="beforeNextTryTimeout">How long wait before next try to read the card</param>
         /// <param name="logger"></param>
         public ICT3K5Device(TimeSpan holdCardTimeout, TimeSpan beforeNextTryTimeout, ILogger<ICT3K5Device> logger = null)
+        {
+            Initialize(holdCardTimeout, beforeNextTryTimeout, logger);
+        }
+
+        public void Initialize(TimeSpan holdCardTimeout, TimeSpan beforeNextTryTimeout, ILogger<ICT3K5Device> logger = null)
         {
             _holdCardTimeout = holdCardTimeout.TotalMilliseconds == 0 ? TimeSpan.FromMilliseconds(500) : holdCardTimeout;
             _beforeNextTryTimeout = beforeNextTryTimeout.TotalMilliseconds == 0 ? TimeSpan.FromMilliseconds(500) : beforeNextTryTimeout;
@@ -380,9 +385,9 @@ namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
             ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
         }
 
-        private readonly TimeSpan _holdCardTimeout;
-        private readonly TimeSpan _beforeNextTryTimeout;
-        private readonly ILogger<ICT3K5Device> _logger;
+        private TimeSpan _holdCardTimeout;
+        private TimeSpan _beforeNextTryTimeout;
+        private ILogger<ICT3K5Device> _logger;
         private bool _deviceOpened = false;
         private string _serialNumber = string.Empty;
         private bool _stopped = true;
