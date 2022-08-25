@@ -1,4 +1,4 @@
-﻿using Filuet.Hardware.CardReaders.ICT3K5;
+﻿using Filuet.Hardware.CardReaders.Readers.ICT3K5;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

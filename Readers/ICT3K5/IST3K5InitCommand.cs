@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Filuet.Hardware.CardReaders.ICT3K5
+namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct InitCommand
+    public unsafe struct IST3K5InitCommand
     {
         public byte bCommandCode;
         public byte bParameterCode;

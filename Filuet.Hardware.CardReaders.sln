@@ -5,11 +5,11 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Readers", "Readers", "{46D2EA9C-978D-4914-B561-CCBAA1D164F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filuet.Hardware.CardReaders.ICT3K5", "Readers\ICT3K5\Filuet.Hardware.CardReaders.ICT3K5.csproj", "{25D32B3E-26A1-4AC3-A541-557CA48EB034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filuet.Hardware.CardReaders", "Readers\ICT3K5\Filuet.Hardware.CardReaders.csproj", "{25D32B3E-26A1-4AC3-A541-557CA48EB034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Filuet.Hardware.CardReaders.Tests", "Readers\Test\Filuet.Hardware.CardReaders.Tests.csproj", "{C335B1E1-CD17-4611-9A2F-900C789A828A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filuet.Hardware.CardReaders.Tests", "Readers\Test\Filuet.Hardware.CardReaders.Tests.csproj", "{C335B1E1-CD17-4611-9A2F-900C789A828A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Filuet.Hardware.CardReaders.PoC", "Readers\PoC\Filuet.Hardware.CardReaders.PoC.csproj", "{D6334476-1512-4087-BD12-B61D93B9A017}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filuet.Hardware.CardReaders.PoC", "Readers\PoC\Filuet.Hardware.CardReaders.PoC.csproj", "{D6334476-1512-4087-BD12-B61D93B9A017}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

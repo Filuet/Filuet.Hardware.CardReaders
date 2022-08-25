@@ -1,16 +1,16 @@
-﻿using Filuet.Hardware.CardReaders.ICT3K5.Enums;
+﻿using Filuet.Hardware.CardReaders.Readers.ICT3K5.Enums;
 using System.Runtime.InteropServices;
 
-namespace Filuet.Hardware.CardReaders.ICT3K5
+namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct ICT3K5Response
     {
-        public REPLY_TYPE replyType;
+        public ICT3K5ResponseType replyType;
         public byte bCommandCode;
         public byte bParameterCode;
 
-        public StatusCode statusCode;
+        public ICT3K5StatusCode statusCode;
 
         public int dwSize;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]

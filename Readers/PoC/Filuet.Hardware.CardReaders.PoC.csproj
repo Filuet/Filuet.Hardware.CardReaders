@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ICT3K5\Filuet.Hardware.CardReaders.ICT3K5.csproj" />
+    <ProjectReference Include="..\ICT3K5\Filuet.Hardware.CardReaders.csproj" />
   </ItemGroup>
 
 </Project>

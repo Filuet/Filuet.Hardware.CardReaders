@@ -1,5 +1,5 @@
-﻿using Filuet.Hardware.CardReaders.ICT3K5.Enums;
-using Filuet.Hardware.CardReaders.ICT3K5.Events;
+﻿using Filuet.Hardware.CardReaders.Readers.ICT3K5.Enums;
+using Filuet.Hardware.CardReaders.Readers.ICT3K5.Events;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Filuet.Hardware.CardReaders.Tests")]
 [assembly: InternalsVisibleTo("Filuet.Hardware.CardReaders.PoC")]
-namespace Filuet.Hardware.CardReaders.ICT3K5
+namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
     internal class ICT3K5Device
     {
@@ -52,7 +52,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
 
             while (!_stopped)
             {
-                if (CheckStatus() != CardReaderStatusses.CardPresent)
+                if (CheckStatus() != ICT3K5CardReaderStatus.CardPresent)
                 {
                     on = !on;
                     SetLed(false, on, false, false);
@@ -110,15 +110,15 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
         /// <returns></returns>
         public bool Eject()
         {
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x33;
             cmd.bParameterCode = 0x30;
 
             cmd.dwSize = 0x00;
             ICT3K5Response reply = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
             if (err == ICT3K5ErrorCode.NO_ERROR)
-                if (reply.replyType == REPLY_TYPE.PositiveReply)
+                if (reply.replyType == ICT3K5ResponseType.PositiveReply)
                     return true;
 
             return false;
@@ -140,7 +140,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
                 if (!_deviceOpened)
                 {
                     StringBuilder serial = new StringBuilder();
-                    ICT3K5ErrorCode e = UnsafeNativeMethods.ConnectDevice(null, serial);
+                    ICT3K5ErrorCode e = ICT3K5UnsafeNativeMethods.ConnectDevice(null, serial);
                     if (e == ICT3K5ErrorCode.CANNOT_CREATE_OBJECT_ERROR
                         || e == ICT3K5ErrorCode.CANNOT_OPEN_DRIVER_ERROR
                         || e == ICT3K5ErrorCode.FAILED_TO_BEGIN_THREAD_ERROR)
@@ -170,7 +170,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
                 if (_deviceOpened)
                 {
                     Disable();
-                    UnsafeNativeMethods.DisconnectDevice(_serialNumber);
+                    ICT3K5UnsafeNativeMethods.DisconnectDevice(_serialNumber);
                     _deviceOpened = false;
                 }
                 _logger?.LogInformation("COM port was closed successfully");
@@ -187,7 +187,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
         {
             for (int i = 0; i < 3; i++)
             {
-                Command cmd = new Command();
+                ICT3K5Command cmd = new ICT3K5Command();
                 cmd.bCommandCode = 0x30;
                 cmd.bParameterCode = 0x30;
                 cmd.dwSize = 0x0a;
@@ -206,14 +206,14 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
                 IntPtr iPtr = Marshal.AllocHGlobal(10);
                 Marshal.Copy(cmd.lpbBody, 0, iPtr, 10);
 
-                InitCommand iCmd = new InitCommand();
+                IST3K5InitCommand iCmd = new IST3K5InitCommand();
                 iCmd.bCommandCode = 0x30;
                 iCmd.bParameterCode = 0x30;
                 iCmd.dwSize = 0x0a;
                 iCmd.ptr = iPtr.ToPointer();
 
                 ICT3K5Response reply = new ICT3K5Response();
-                ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, iCmd, 20000, ref reply);
+                ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, iCmd, 20000, ref reply);
                 Marshal.FreeHGlobal(iPtr);
 
                 if (err != ICT3K5ErrorCode.NO_ERROR)
@@ -222,7 +222,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
                     return false;
                 }
 
-                if (reply.replyType == REPLY_TYPE.PositiveReply)
+                if (reply.replyType == ICT3K5ResponseType.PositiveReply)
                 {
                     _logger?.LogInformation($"Positive reply {reply.statusCode.bSt0:X2} {reply.statusCode.bSt1:X2}");
                     return true;
@@ -233,34 +233,34 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
 
         private void ReReadCard()
         {
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x33;
             cmd.bParameterCode = 0x30;
 
             cmd.dwSize = 0x00;
             ICT3K5Response reply = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
 
             cmd.bCommandCode = 0x34;
             reply = new ICT3K5Response();
-            err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
+            err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
         }
 
         private bool EnableCardReader()
         {
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x3a;
             cmd.bParameterCode = 0x30;
             cmd.dwSize = 0;
             ICT3K5Response reply = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
             if (err != ICT3K5ErrorCode.NO_ERROR)
             {
                 _logger?.LogError($"Driver returned {err}");
                 return false;
             }
 
-            if (reply.replyType == REPLY_TYPE.PositiveReply)
+            if (reply.replyType == ICT3K5ResponseType.PositiveReply)
             {
                 _logger?.LogInformation($"Positive response detected {reply.statusCode.bSt0:X2} {reply.statusCode.bSt1:X2}");
                 return true;
@@ -272,35 +272,35 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
             }
         }
 
-        private CardReaderStatusses CheckStatus()
+        private ICT3K5CardReaderStatus CheckStatus()
         {
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x31;
             cmd.bParameterCode = 0x31;
             cmd.dwSize = 0x00;
             ICT3K5Response reply = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
-            if (reply.replyType == REPLY_TYPE.PositiveReply && reply.statusCode.bSt0 == 0x30 && reply.statusCode.bSt1 == 0x32)
-                return CardReaderStatusses.CardPresent;
-            else if (reply.replyType == REPLY_TYPE.NegativeReply)
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
+            if (reply.replyType == ICT3K5ResponseType.PositiveReply && reply.statusCode.bSt0 == 0x30 && reply.statusCode.bSt1 == 0x32)
+                return ICT3K5CardReaderStatus.CardPresent;
+            else if (reply.replyType == ICT3K5ResponseType.NegativeReply)
             {
                 OnReadFailed?.Invoke(this, new OnReadFailedEventArgs());
                 _stopped = true;
             }
 
-            return CardReaderStatusses.NoCard;
+            return ICT3K5CardReaderStatus.NoCard;
         }
 
         private string[] ReadTracks()
         {
             string tr1 = "", tr2 = "";
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x36;
             cmd.bParameterCode = 0x31;
             cmd.dwSize = 0;
 
             ICT3K5Response response = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref response);
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref response);
             if (err != ICT3K5ErrorCode.NO_ERROR)
             {
                 _logger?.LogError("Driver return an error " + err.ToString());
@@ -312,7 +312,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
             cmd.bParameterCode = 0x32;
 
             ICT3K5Response response1 = new ICT3K5Response();
-            err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref response1);
+            err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref response1);
             if (err != ICT3K5ErrorCode.NO_ERROR)
             {
                 _logger?.LogError($"Driver returned {err}");
@@ -326,25 +326,25 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
         private bool Disable()
         {
             SetLed(false, false, false, false);
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x3a;
             cmd.bParameterCode = 0x31;
             cmd.dwSize = 0;
             ICT3K5Response reply = new ICT3K5Response();
-            ICT3K5ErrorCode err = UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
+            ICT3K5ErrorCode err = ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 1000, ref reply);
             if (err != ICT3K5ErrorCode.NO_ERROR)
             {
                 _logger?.LogError(err.ToString());
                 return false;
             }
-            if (reply.replyType == REPLY_TYPE.PositiveReply)
+            if (reply.replyType == ICT3K5ResponseType.PositiveReply)
                 return true;
             return false;
         }
 
         private void SetLed(bool Red, bool Green, bool Orange, bool Flash)
         {
-            Command cmd = new Command();
+            ICT3K5Command cmd = new ICT3K5Command();
             cmd.bCommandCode = 0x35;
             if (Red)
                 cmd.bParameterCode = 0x32;
@@ -357,7 +357,7 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
 
             cmd.dwSize = 0;
             ICT3K5Response reply = new ICT3K5Response();
-            UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
+            ICT3K5UnsafeNativeMethods.ExecuteCommand(_serialNumber, cmd, 20000, ref reply);
         }
 
         private readonly TimeSpan _holdCardTimeout;
