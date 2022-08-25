@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("Filuet.Hardware.CardReaders.PoC")]
 namespace Filuet.Hardware.CardReaders.Readers.ICT3K5
 {
-    internal class ICT3K5Device
+    public class ICT3K5Device
     {
         internal event EventHandler<CardDataEventArgs> OnCardData;
         internal event EventHandler<CardReadFailedEventArgs> OnReadFailed;
