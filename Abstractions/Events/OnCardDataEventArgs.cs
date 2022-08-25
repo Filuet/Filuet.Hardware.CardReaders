@@ -17,6 +17,9 @@ namespace Filuet.Hardware.CardReaders.Abstractions.Events
         [JsonPropertyName("expiryYear")]
         public uint ExpiryYear { get; set; }
 
+        [JsonPropertyName("timestamp")]
+        public DateTimeOffset Timestamp => DateTimeOffset.Now;
+
         public override string ToString() => $"{CardHolder} {CardNumber} {ExpiryMonth}/{ExpiryYear}";
     }
 }
