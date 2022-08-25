@@ -63,9 +63,15 @@ namespace Filuet.Hardware.CardReaders.ICT3K5
 
                     string[] tracks = ReadTracks();
 
-                    if (tracks != null)
+                    if (tracks != null && tracks.Length > 0)
                     {
-                        OnCardData?.Invoke(this, new OnDataEventArgs { Track1 = tracks[0], Track2 = tracks[1] });
+                        var splitted = tracks[0].Split('^', StringSplitOptions.RemoveEmptyEntries);
+                        if (splitted.Length >= 3)
+                            OnCardData?.Invoke(this, new OnDataEventArgs { CardNumber = splitted[0].Replace("B", string.Empty).Trim(),
+                                CardHolder = splitted[1].Trim(),
+                                ExpiryYear = Convert.ToUInt32(splitted[2].Split(' ')[0].Substring(0, 2).Trim()),
+                                ExpiryMonth = Convert.ToUInt32(splitted[2].Split(' ')[0].Substring(2, 2).Trim()) });
+
                         SetLed(false, false, true, false);
                         Thread.Sleep(_holdCardTimeout);
                         Eject();

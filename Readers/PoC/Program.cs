@@ -10,13 +10,13 @@ namespace PoC
     {
         static async Task Main(string[] args)
         {
-            ICT3K5Device device = new ICT3K5Device(TimeSpan.FromMilliseconds(5000),
+            ICT3K5Device device = new ICT3K5Device(TimeSpan.FromMilliseconds(500),
               TimeSpan.FromMilliseconds(500),
               null);
 
             device.OnCardData += (sender, e) =>
             {
-                Console.WriteLine(e.Track1 + " " + e.Track2);
+                Console.WriteLine($"{e.CardNumber}/{e.CardHolder}/{e.ExpiryYear}/{e.ExpiryMonth}");
             };
 
             device.OnReadFailed += (sender, e) =>
