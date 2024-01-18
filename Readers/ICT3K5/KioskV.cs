@@ -73,6 +73,8 @@ namespace Filuet.Hardware.CardReaders
         }
 
         public async Task<bool> Ping() {
+            IDT_Device.startUSBMonitoring();
+
             int index = 0;
             while (string.IsNullOrWhiteSpace(_deviceIdentifier) && index < 30) {
                 await Task.Delay(100);
