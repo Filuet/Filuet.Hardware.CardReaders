@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<PackageVersion>1.0.4</PackageVersion>
+	<PackageVersion>1.0.5</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IDTechSDK_STD" Version="3.2.4.393" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
