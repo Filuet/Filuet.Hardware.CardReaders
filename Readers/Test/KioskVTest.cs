@@ -32,5 +32,23 @@ namespace Filuet.Hardware.CardReaders.Tests
                 device.Stop();
             }
         }
+
+        [Fact]
+        public async Task Test_Contactless_reset() {
+            // Prepare
+            KioskV device = new KioskV();
+
+            // Perform
+            device.Reset();
+        }
+
+        [Fact]
+        public async Task Test_Contactless_ping() {
+            // Prepare
+            KioskV device = new KioskV();
+
+            // Perform
+            bool status = await device.Ping();
+        }
     }
 }

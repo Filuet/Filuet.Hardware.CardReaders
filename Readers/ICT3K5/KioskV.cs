@@ -3,6 +3,7 @@ using IDTechSDK;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Filuet.Hardware.CardReaders
 {
@@ -61,9 +62,28 @@ namespace Filuet.Hardware.CardReaders
             }
         }
 
+        public void Reset() {
+            if (string.IsNullOrWhiteSpace(_deviceIdentifier))
+                IDT_Device.SharedController.device_rebootDevice(_deviceIdentifier);
+        }
+
         public void Stop() {
             IDT_Device.stopUSBMonitoring();
             IDT_Device.closeAllCommConnections();
+        }
+
+        public async Task<bool> Ping() {
+            int index = 0;
+            while (string.IsNullOrWhiteSpace(_deviceIdentifier) && index < 30) {
+                await Task.Delay(100);
+                index++;
+            }
+
+            if (string.IsNullOrWhiteSpace(_deviceIdentifier))
+                return false;
+
+            RETURN_CODE rt = IDT_Device.SharedController.device_pingDevice(_deviceIdentifier);
+            return rt == RETURN_CODE.RETURN_CODE_DO_SUCCESS;
         }
 
         private byte[] FromHex(string hex) {
