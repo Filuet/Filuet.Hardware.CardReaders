@@ -125,13 +125,13 @@ namespace Filuet.Hardware.CardReaders
             data = data.ToLower();
 
             if (data.Contains("mastercard"))
-                return "MasterCard";
+                return "MC";
             else if (data.Contains("visa"))
-                return "Visa";
+                return "VI";
             else if (data.Contains("americanexpress") || data.Contains("amex"))
-                return "AmericanExpress";
-            else if (data.Contains("maestro"))
-                return "Maestro";
+                return "AX";
+            else if (data.Contains("jcb"))
+                return "JC";
             else if (data.Contains("kookmin") || data.Contains("국민"))
                 return "KB"; // Kookmin bank
             else if (data.Contains("samsung") || data.Contains("삼성"))
