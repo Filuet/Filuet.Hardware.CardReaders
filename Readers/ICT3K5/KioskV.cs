@@ -11,6 +11,7 @@ namespace Filuet.Hardware.CardReaders
     {
         public event EventHandler<CardDataEventArgs> OnCardData;
         public event EventHandler<CardReadFailedEventArgs> OnReadFailed;
+        public event EventHandler<EventArgs> OnTimeout;
 
         private static Regex regex = new Regex("^[0-9]+$", RegexOptions.Compiled);
 
@@ -47,7 +48,10 @@ namespace Filuet.Hardware.CardReaders
                         System = ExtractSystem(decrypted)
                     });
                 }
+                else OnReadFailed?.Invoke(this, new CardReadFailedEventArgs { Error = "Unknown card" });
             }
+            else if (state == DeviceState.SwipeTimeout)
+                OnTimeout?.Invoke(this, null);
         }
 
         /// <summary>
@@ -59,6 +63,7 @@ namespace Filuet.Hardware.CardReaders
             if (rt != RETURN_CODE.RETURN_CODE_DO_SUCCESS) {
                 string error = $"Activate Transaction failed Error Code: 0x{string.Format("{0:X}", (ushort)rt)}: {IDTechSDK.errorCode.getErrorString(rt)}";
                 OnReadFailed?.Invoke(this, new CardReadFailedEventArgs { Error = error });
+                Reset();
             }
         }
 

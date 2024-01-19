@@ -8,8 +8,9 @@ namespace Filuet.Hardware.CardReaders.Tests
     public class KioskVTest
     {
         [Fact]
-        public async Task Test_Contactless_tead()
+        public async Task Test_Contactless_read()
         {
+            
             KioskV device = new KioskV();
 
             device.OnCardData += (sender, e) => {
@@ -27,9 +28,9 @@ namespace Filuet.Hardware.CardReaders.Tests
                 // Perform
                 device.Activate();
 
-                await Task.Delay(10000);
+                //await Task.Delay(10000);
 
-                device.Stop();
+                //device.Stop();
             }
         }
 
